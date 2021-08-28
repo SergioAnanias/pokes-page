@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block titulo %} {% endblock %}
+
+{% block script %}
+$('#myTable').DataTable();
+
+{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center">Bienvenido {{ selfuser.name }}</h1>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{ poked|length}} people poked you</h5>
+        <ul>
+        {% for poke in poked %}
+    <li>
+        {{poke.userpoke__name}} te  ha dado {{ poke.userpoke__count}} pokes
+    </li>
+    {% endfor %}
+</ul>
+    
+    </div>
+</div>
+<table id="myTable">
+    <thead>
+        <th>Nombre</th>
+        <th>Alias</th>
+        <th>Correo</th>
+        <th>Poke History</th>
+        <th>Action</th>
+    </thead>
+    <tbody>
+        {% for usuario in pokeHistory %}
+        <tr>
+            <td>
+                {{ usuario.name }}
+            </td>
+            <td>
+                {{ usuario.alias}}
+            </td>
+            <td>
+                {{ usuario.email }}
+            </td>
+            <td>
+                {{ usuario.poked__count }} pokes
+            </td>
+            <td>
+                <form method="POST" action="/poke"> {% csrf_token %}
+                    <input type="hidden" name="targetuser" value={{usuario.id}}>
+                    <button type="submit" name="submit" class="btn btn-primary">Poke</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
